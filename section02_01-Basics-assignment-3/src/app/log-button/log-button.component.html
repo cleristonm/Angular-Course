@@ -1,0 +1,8 @@
+<button class="btn btn-primary" (click)="toggleShowDetails()">Show details</button>
+<p *ngIf="showDetails">The password is s3cr3t</p>
+
+<li *ngFor="let item of log; index as i">
+    <span 
+        [ngStyle]="{backgroundColor: i >= 5 ? 'blue' : 'transparent'}"
+        [ngClass]="{classLog: i >= 5}">{{i}} / {{item}}</span>
+</li>
