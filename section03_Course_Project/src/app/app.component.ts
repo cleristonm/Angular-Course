@@ -6,4 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  menuSelected: string;
+
+  changeMenu(menu: string){
+    this.menuSelected=menu;
+  }
 }
