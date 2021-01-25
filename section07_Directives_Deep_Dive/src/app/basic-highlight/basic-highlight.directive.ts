@@ -10,6 +10,8 @@ export class BasicHighlightDirective implements OnInit {
         
     }
 
+    //https://medium.com/better-programming/angular-manipulate-properly-the-dom-with-renderer-16a756508cba
+    //https://angular.io/api/core/Renderer2
     ngOnInit(){
         this.elementRef.nativeElement.style.backgroundColor = 'green';
     }
