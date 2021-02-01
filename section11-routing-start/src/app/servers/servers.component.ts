@@ -19,6 +19,7 @@ export class ServersComponent implements OnInit {
   }
 
   onReload(){
+    //Using the relativeTo, will break this function
     this.router.navigate(["server"], {relativeTo: this.route});
   }
 
