@@ -17,11 +17,12 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   addIngredientsToShoppingList(){
-    this.recipe.ingredients.forEach(ingredient => {
-      this.slService.addIngredient(ingredient);      
-      console.log(ingredient);
-    });
+    // this.recipe.ingredients.forEach(ingredient => {
+    //   this.slService.addIngredient(ingredient);      
+    //   console.log(ingredient);
+    // });
     
+    this.slService.addIngredients(this.recipe.ingredients);
   }
 
 }
