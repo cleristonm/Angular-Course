@@ -40,5 +40,15 @@ export class RecipeService {
     return this.recipes[index];
   }
 
+  addRecipe(name: string, description: string, imagePath: string){
+    const recipeAdd : Recipe = new Recipe(name, description, imagePath, null);
+    this.recipes.push(recipeAdd);
+  }
+
+  editRecipe(index: number, name: string, description: string, imagePath: string){
+    const recipeEdit : Recipe = new Recipe(name, description, imagePath, null);
+    this.recipes[index] = recipeEdit;
+  }
+
 
 }
