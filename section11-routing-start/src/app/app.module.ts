@@ -1,4 +1,3 @@
-import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -35,8 +34,7 @@ import { ServerResolver } from './servers/server/server-resolver.service';
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    
+    FormsModule,    
     AppRoutingModule
   ],
   providers: [ServersService, AuthService, AuthGuard, CanDeactivateGuard, ServerResolver],
