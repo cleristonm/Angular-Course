@@ -7,9 +7,5 @@ import { Component } from '@angular/core';
 })
 
 export class AppComponent {
-  menuSelected: string = 'recipes';
 
-  changeMenu(menu: string){
-    this.menuSelected=menu;
-  }
 }
