@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12">
-        <form (submit)="addIngredient(nameInput.value, amountInput.value)">
+        <form #sForm="ngForm" (ngSubmit)="onSubmit()">
             <div class="row">
                 <div class="col-sm-5 form-group">
                     <label for="name">Name</label>
@@ -8,16 +8,30 @@
                         type="text" 
                         class="form-control" 
                         id="name"
-                        #nameInput>
+                        name="name"                        
+                        [(ngModel)]="newIngredient.name"
+                        required
+                        minlength="3"
+                        >
                 </div>
                 <div class="col-sm-2 form-group">
                     <label for="amount">Amount</label>
-                    <input type="number" class="form-control" #amountInput>
+                    <input 
+                        [(ngModel)]="newIngredient.amount"
+                        name="amount"
+                        type="number"                         
+                        class="form-control"
+                        required
+                        >
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12">
-                    <button class="btn btn-success" type="submit">Add</button>
+                    <button 
+                        class="btn btn-success" 
+                        type="submit"
+                        [disabled]="!sForm.form.valid"
+                        >Add</button>
                     <button class="btn btn-danger" type="button">Delete Item</button>
                     <button class="btn btn-primary" type="button">Clear</button>
                 </div>
