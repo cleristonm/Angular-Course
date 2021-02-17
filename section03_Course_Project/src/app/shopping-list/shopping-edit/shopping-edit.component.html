@@ -35,7 +35,7 @@
                         [disabled]="!sForm.form.valid"
                         > {{ editMode ? 'Update' : 'Add'}}</button>
                     <button class="btn btn-danger" type="button">Delete Item</button>
-                    <button class="btn btn-primary" type="button">Clear</button>
+                    <button class="btn btn-primary" type="button" (click)="onClear(sForm)">{{ editMode ? 'Cancel' : 'Clear'}}</button>
                 </div>
             </div>
         </form>
