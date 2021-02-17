@@ -33,7 +33,7 @@
                         class="btn btn-success" 
                         type="submit"
                         [disabled]="!sForm.form.valid"
-                        >Add</button>
+                        > {{ editMode ? 'Update' : 'Add'}}</button>
                     <button class="btn btn-danger" type="button">Delete Item</button>
                     <button class="btn btn-primary" type="button">Clear</button>
                 </div>
