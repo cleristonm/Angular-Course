@@ -34,8 +34,8 @@
                         type="submit"
                         [disabled]="!sForm.form.valid"
                         > {{ editMode ? 'Update' : 'Add'}}</button>
-                    <button class="btn btn-danger" type="button">Delete Item</button>
-                    <button class="btn btn-primary" type="button" (click)="onClear(sForm)">{{ editMode ? 'Cancel' : 'Clear'}}</button>
+                    <button class="btn btn-danger" type="button" *ngIf="editMode" (click)="onDelete(sForm)">Delete Item</button>
+                    <button class="btn btn-primary" type="button" *ngIf="sForm.dirty || editMode" (click)="onClear(sForm)">{{ editMode ? 'Cancel' : 'Clear'}}</button>
                 </div>
             </div>
         </form>

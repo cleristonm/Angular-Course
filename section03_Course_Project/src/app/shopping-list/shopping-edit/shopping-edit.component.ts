@@ -35,7 +35,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
             //   name: this.editedItem.name,
             //   amount: this.editedItem.amount
             // })
-            console.log('passou');
+            
             
     })
   }
@@ -65,4 +65,8 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     this.editMode = false;
   }
 
+  onDelete(shoppingform: NgForm){
+    this.slService.deleteIngredient(this.editedItemIndex);
+    this.onClear(shoppingform);
+  }
 }
