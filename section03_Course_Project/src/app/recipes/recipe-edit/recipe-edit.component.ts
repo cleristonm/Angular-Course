@@ -54,6 +54,10 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
+  onSubmit(){
+    console.log(this.recipeForm)
+  }
+
   onAddEditRecipe(name: string, description: string, imagePath: string){
     if (this.editMode){
       this.recipeService.editRecipe(this.id, name, description, imagePath);
