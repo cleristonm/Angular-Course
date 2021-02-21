@@ -75,26 +75,36 @@ export class RecipeEditComponent implements OnInit {
   onAddIngredient(){
     (<FormArray>this.recipeForm.get('ingredients')).push( new FormGroup({
       
-        'name': new FormControl(Validators.required),
-        'amount': new FormControl([
+        'name': new FormControl(null, Validators.required),
+        'amount': new FormControl(null, [
           Validators.required, 
-          Validators.pattern(/^[1-9]+[0-9]*$/)])
+          Validators.pattern(/^[1-9]+[0-9]*$/)]),
       
     }))
   }
 
   onSubmit(){
-    console.log(this.recipeForm)
-  }
-
-  onAddEditRecipe(name: string, description: string, imagePath: string){
+    // const recipe = new Recipe(
+    //   this.recipeForm.value['name'],
+    //   this.recipeForm.value['description'],
+    //   this.recipeForm.value['imagePath'],
+    //   this.recipeForm.value['ingredients']
+    // );
     if (this.editMode){
-      this.recipeService.editRecipe(this.id, name, description, imagePath);
-    }else{
-      this.recipeService.addRecipe(name, description, imagePath);
-    }    
-    this.router.navigate(['/recipes'], {relativeTo: this.route});
-
+      this.recipeService.editRecipe(this.id, this.recipeForm.value);
+    }else {
+      this.recipeService.addRecipe(this.recipeForm.value);
+    }
   }
+
+  // onAddEditRecipe(name: string, description: string, imagePath: string){
+  //   if (this.editMode){
+  //     this.recipeService.editRecipe(this.id, name, description, imagePath);
+  //   }else{
+  //     this.recipeService.addRecipe(name, description, imagePath);
+  //   }    
+  //   this.router.navigate(['/recipes'], {relativeTo: this.route});
+
+  // }
 
 }
