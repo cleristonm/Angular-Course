@@ -13,6 +13,7 @@ import { RecipeService } from '../recipe.service';
 export class RecipeDetailComponent implements OnInit, OnDestroy {
   recipe : Recipe;
   subscription : Subscription;
+  selectedId: number;
 
   constructor(private slService: ShoppingListService,
     private recipeService: RecipeService, 
@@ -22,8 +23,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {    
     this.subscription = this.route.params.subscribe(
       (params: Params) => {
-        const id = +params['id'];
-        this.recipe = this.recipeService.getRecipe(id);
+        this.selectedId = +params['id'];
+        this.recipe = this.recipeService.getRecipe(this.selectedId);
       }
     )
     console.log(this.recipe);
@@ -42,6 +43,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.slService.addIngredients(this.recipe.ingredients);
   }
 
-
+  onDeleteRecipe(){
+    if (confirm("Are you sure to delete this recipe: "+this.recipe.name)) {
+      this.recipeService.deleteRecipe(this.selectedId);
+      this.router.navigate(['/recipes']);
+    }
+  }
 
 }
