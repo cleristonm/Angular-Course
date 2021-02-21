@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ShoppingListService } from 'src/app/shopping-list/shopping-list.service';
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
@@ -9,8 +10,9 @@ import { RecipeService } from '../recipe.service';
   templateUrl: './recipe-detail.component.html',
   styleUrls: ['./recipe-detail.component.css']
 })
-export class RecipeDetailComponent implements OnInit {
+export class RecipeDetailComponent implements OnInit, OnDestroy {
   recipe : Recipe;
+  subscription : Subscription;
 
   constructor(private slService: ShoppingListService,
     private recipeService: RecipeService, 
@@ -18,7 +20,7 @@ export class RecipeDetailComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {    
-    this.route.params.subscribe(
+    this.subscription = this.route.params.subscribe(
       (params: Params) => {
         const id = +params['id'];
         this.recipe = this.recipeService.getRecipe(id);
@@ -27,6 +29,9 @@ export class RecipeDetailComponent implements OnInit {
     console.log(this.recipe);
   }
   
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
+  }
 
   addIngredientsToShoppingList(){
     // this.recipe.ingredients.forEach(ingredient => {

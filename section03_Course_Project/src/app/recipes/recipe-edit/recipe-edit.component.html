@@ -7,7 +7,10 @@
                         class="btn btn-success"
                         type="submit"
                         [disabled]="!recipeForm.valid">Save</button>
-                    <button class="btn btn-danger" type="button">Cancel</button>
+                    <button 
+                        class="btn btn-danger" 
+                        type="button"
+                        (click)="onCancel()">Cancel</button>
                 </div>
             </div> 
             <div class="row">
@@ -67,7 +70,7 @@
                             <input type="number" formControlName="amount" class="form-control">
                         </div>
                         <div class="col-xs-2">
-                            <button class="btn btn-danger">
+                            <button class="btn btn-danger" (click)="removeIngredient(i)">
                                X     
                             </button>
                         </div>

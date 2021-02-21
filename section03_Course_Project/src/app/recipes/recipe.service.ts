@@ -36,6 +36,10 @@ export class RecipeService {
     return this.recipes.slice();
   }
 
+  getRecipesCount(): number{
+    return this.recipes.length;
+  } 
+
   getRecipe(index: number){
     return this.recipes[index];
   }
