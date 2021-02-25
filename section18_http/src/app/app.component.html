@@ -58,10 +58,14 @@
             <p>{{ post.title }}</p>
         </li>
       </ul>
-      <div class="d-flex align-items-center" *ngIf="isFetching">
+      <div class="d-flex align-items-center" *ngIf="isFetching && !error">
         <strong>Loading...</strong>
         <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
       </div>      
+    </div>
+    <div class="alert alert-danger" *ngIf="error">
+      <h1>An Error Ocurred</h1>
+      <p>{{ error }} </p>
     </div>
   </div>
 </div>
