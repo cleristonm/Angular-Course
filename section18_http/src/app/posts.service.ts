@@ -14,11 +14,9 @@ export class PostsService {
   createAndStorePost(title: string, content: string){
 
     const postData : Post = { title: title, content: content};
-    this.http.post< {name: string} >(
+    return this.http.post< {name: string} >(
       'https://angular-course-section-18-default-rtdb.firebaseio.com/posts.json', 
-      postData).subscribe( (responseData) => {
-        console.log(responseData);
-      });
+      postData);
   }
 
   fetchPosts(){
@@ -36,5 +34,11 @@ export class PostsService {
       }
       return postsArray;
     }));
+  }
+
+  deletePosts(){
+    return this.http.delete(
+      'https://angular-course-section-18-default-rtdb.firebaseio.com/posts.json'
+    );
   }
 }
