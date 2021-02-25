@@ -22,7 +22,9 @@ export class PostsService {
   }
 
   fetchPosts(){
-    this.http.get< {[key: string]: Post } >(
+    // another way to do this is using a subject (when there are more components using this service)
+    
+    return this.http.get< {[key: string]: Post } >(
       'https://angular-course-section-18-default-rtdb.firebaseio.com/posts.json'
     )
     .pipe( map( responseData  => {
@@ -33,8 +35,6 @@ export class PostsService {
         }        
       }
       return postsArray;
-    }))
-    .subscribe( posts => {
-    });
+    }));
   }
 }
