@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -29,11 +29,16 @@ export class PostsService {
   }
 
   fetchPosts(){
+    let searchParams = new HttpParams();
+    searchParams = searchParams.append('print', 'pretty');
+    searchParams = searchParams.append('order', 'column1');
+    
     // another way to do this is using a subject (when there are more components using this service)
     
     return this.http.get< {[key: string]: Post } >(
       'https://angular-course-section-18-default-rtdb.firebaseio.com/posts.json',{
-        headers: new HttpHeaders( { 'Custom-Header' : 'Hello'})
+        headers: new HttpHeaders( { 'Custom-Header' : 'Hello'}),
+        params : searchParams
       }
     )
     .pipe( map( responseData  => {
