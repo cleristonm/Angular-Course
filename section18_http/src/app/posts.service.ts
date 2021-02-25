@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 
@@ -7,6 +8,7 @@ import { Post } from './post.model';
   providedIn: 'root'
 })
 export class PostsService {
+  error = new Subject<string>();  
 
   constructor(private http: HttpClient) { }
 
@@ -16,7 +18,14 @@ export class PostsService {
     const postData : Post = { title: title, content: content};
     return this.http.post< {name: string} >(
       'https://angular-course-section-18-default-rtdb.firebaseio.com/posts.json', 
-      postData);
+      postData).
+      subscribe( 
+        () => {
+          return postData;
+        },
+        error => {
+          this.error.next(error.message);
+        } );
   }
 
   fetchPosts(){
