@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Post } from './post.model';
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,9 @@ export class AppComponent implements OnInit {
     this.fetchPosts();
   }
 
-  onCreatePost(postData: { title: string; content: string }) {
+  onCreatePost(postData: Post) {
     // Send Http request
-    this.http.post(
+    this.http.post< {name: string} >(
         'https://angular-course-section-18-default-rtdb.firebaseio.com/posts.json', 
         postData).subscribe( (responseData) => {
           console.log(responseData);
@@ -30,14 +31,14 @@ export class AppComponent implements OnInit {
   }
 
   private fetchPosts(){
-    this.http.get(
+    this.http.get< {[key: string]: Post } >(
       'https://angular-course-section-18-default-rtdb.firebaseio.com/posts.json'
     )
-    .pipe( map( responsaData => {
-      const postsArray = [];
-      for (const key in responsaData) {
-        if (responsaData.hasOwnProperty(key)){
-          postsArray.push( { ...responsaData[key], id: key });
+    .pipe( map( responseData  => {
+      const postsArray : Post[] = [];
+      for (const key in responseData) {
+        if (responseData.hasOwnProperty(key)){
+          postsArray.push( { ...responseData[key], id: key });
         }        
       }
       return postsArray;
