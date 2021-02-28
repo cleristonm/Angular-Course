@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { DataStorageService } from '../shared/data-storage.service';
 
 
 @Component({
@@ -8,6 +9,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core'
 export class HeaderComponent{
     
     @Output() menuChanged = new EventEmitter<string>();
+
+    constructor(private dataStorageService : DataStorageService){}
+
+    onSaveData(){
+        this.dataStorageService.storeRecipes();
+
+    }
 
     
     
