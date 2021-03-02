@@ -29,6 +29,14 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]            
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -45,7 +53,7 @@
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
-            }
+            }            
           }
         },
         "serve": {
@@ -56,6 +64,9 @@
           "configurations": {
             "production": {
               "browserTarget": "my-first-app:build:production"
+            },
+            "dev": {
+              "browserTarget": "my-first-app:build:dev"
             }
           }
         },
