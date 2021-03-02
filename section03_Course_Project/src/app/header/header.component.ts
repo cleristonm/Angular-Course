@@ -1,5 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core'
+import { environment } from 'src/environments/environment';
 import { DataStorageService } from '../shared/data-storage.service';
+
 
 
 @Component({
@@ -14,7 +16,7 @@ export class HeaderComponent{
 
     onSaveData(){
         this.dataStorageService.storeRecipes();
-
+        console.log(environment.mykey);
     }
 
     onFetchData(){
