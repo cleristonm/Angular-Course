@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
@@ -26,17 +26,7 @@ export class AuthService {
       password: password,
       returnSecureToken: true
     })
-    .pipe(catchError( errorRes => {
-      let errorMesage = 'An unknow error occured!';
-      if (!errorRes.error || !errorRes.error.error){
-        return throwError(errorMesage);
-      }
-      switch (errorRes.error.error.message){
-        case 'EMAIL_EXISTS':
-          errorMesage =  'This email exists already!';
-      }
-      return throwError(errorMesage);
-    }) )
+    .pipe(catchError( this.handleError ));
 
   }
 
@@ -46,5 +36,21 @@ export class AuthService {
       password: password,
       returnSecureToken: true
     })
+    .pipe(catchError( this.handleError ));
+  }
+
+  private handleError(errorRes: HttpErrorResponse){
+    let errorMesage = 'An unknow error occured!';
+      if (!errorRes.error || !errorRes.error.error){
+        return throwError(errorMesage);
+      }
+      switch (errorRes.error.error.message){
+        case 'EMAIL_EXISTS':
+          errorMesage =  'This email exists already!';
+        case 'EMAIL_NOT_FOUND' || 'INVALID_PASSWORD' || 'USER_DISABLED':
+          errorMesage =  'Credentials are not valid or is disabled.';
+      }
+      return throwError(errorMesage);
+
   }
 }
