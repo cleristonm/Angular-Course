@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Recipe } from '../recipes/recipe.model';
 import { RecipeService } from '../recipes/recipe.service';
-import { map, tap } from 'rxjs/operators';
+import { exhaustMap, map, take, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataStorageService {
-
+  
   constructor(private http: HttpClient, 
-      private recipeService : RecipeService) { }
+      private recipeService : RecipeService,
+      private authService: AuthService) { }
 
   storeRecipes(){
     const recipes = this.recipeService.getRecipes();
@@ -26,24 +28,37 @@ export class DataStorageService {
   }
 
   fetchData(){
-    return this.http
-      .get<Recipe[]>('https://ng-recipe-book-course-bb7b7-default-rtdb.firebaseio.com/recipes.json')
-      .pipe( 
-        map( recipes => {
-          // the map above is a rxjs operator
-          // the map bellow is a javascript operator
-          return recipes.map( recipes => {
-            //return a copy o recipes with a empty array of ingredients, when the
-            //recipe does not have ingredients
-            return {...recipes, ingredients: recipes.ingredients ? recipes.ingredients : []}
-          });
-        }),
-        //the tap method allow us to get the result data e use it
-        //in this way we do not need to implement a subscribe here
-        tap( recipes => {
-          this.recipeService.setRecipes( recipes )
-        })
-      )
+
+    //https://www.udemy.com/course/the-complete-guide-to-angular-2/learn/lecture/14466438#notes
+    return this.authService.user.pipe(
+      take(1), 
+      exhaustMap( user => {
+      return this.http.get<Recipe[]>(
+        'https://ng-recipe-book-course-bb7b7-default-rtdb.firebaseio.com/recipes.json',
+        {
+          params: new HttpParams().set('auth', user.token)
+        }
+        );
+    }),
+    map( recipes => {
+        // the map above is a rxjs operator
+        // the map bellow is a javascript operator
+        return recipes.map( recipes => {
+          //return a copy o recipes with a empty array of ingredients, when the
+          //recipe does not have ingredients
+          return {...recipes, ingredients: recipes.ingredients ? recipes.ingredients : []}
+        });
+      }),
+      //the tap method allow us to get the result data e use it
+      //in this way we do not need to implement a subscribe here
+      tap( recipes => {
+        this.recipeService.setRecipes( recipes )
+      })    
+    
+    );
+
+    
+      
 
   }
 }

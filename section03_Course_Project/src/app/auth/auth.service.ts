@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, tap } from 'rxjs/operators';
-import { Subject, throwError } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from './user.model';
 
@@ -19,8 +19,10 @@ export interface AuthResponseData{
   providedIn: 'root'
 })
 export class AuthService {
-  user = new Subject<User>();
+  //https://stackoverflow.com/questions/43348463/what-is-the-difference-between-subject-and-behaviorsubject
+  user = new BehaviorSubject<User>(null);
   
+
   constructor(private http : HttpClient) { }
 
   signup(email: string, password: string){
