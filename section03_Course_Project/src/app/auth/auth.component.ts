@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ import { AuthService, AuthResponseData } from './auth.service';
   selector: 'app-auth',
   templateUrl: './auth.component.html'
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode = true;
   isLoading = false;
   error : string = null;
@@ -64,6 +64,12 @@ export class AuthComponent implements OnInit {
 
   onHandleError(){
     this.error = null;
+  }
+
+  ngOnDestroy(){
+    if (this.closeSubs){
+      this.closeSubs.unsubscribe();
+    }
   }
 
   private showErrorAlert(messsage: string){    
