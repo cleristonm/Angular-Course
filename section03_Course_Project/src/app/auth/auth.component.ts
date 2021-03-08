@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AlertComponent } from '../shared/alert/alert.component';
 import { AuthService, AuthResponseData } from './auth.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class AuthComponent implements OnInit {
   error : string = null;
 
   constructor(private authService: AuthService,
-      private router: Router) { }
+      private router: Router,
+      private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit(): void {
   }
@@ -48,6 +50,7 @@ export class AuthComponent implements OnInit {
     errorMessage => {
       this.error = errorMessage;
       this.isLoading = false;
+      this.showErrorAlert(errorMessage);
     });
 
     
@@ -57,5 +60,12 @@ export class AuthComponent implements OnInit {
 
   onHandleError(){
     this.error = null;
+  }
+
+  private showErrorAlert(messsage: string){    
+    const alertCmpFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+    
+
+    
   }
 }
