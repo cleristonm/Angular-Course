@@ -22,7 +22,7 @@ import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
     RecipeDetailComponent,
     RecipeItemComponent,
     RecipeEditComponent,
-  ]
+  ],
   imports: [
     CommonModule
   ]
