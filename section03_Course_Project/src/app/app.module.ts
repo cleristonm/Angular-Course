@@ -24,8 +24,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     BrowserModule,    
     HttpClientModule,
-    AppRoutingModule,
-    RecipesModule,
+    AppRoutingModule,    
     ShoppingListModule,
     SharedModule,
     AuthModule,
