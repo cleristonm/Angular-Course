@@ -5,6 +5,7 @@ import { ShoppingListComponent } from './shopping-list.component';
 import { ShoppingEditComponent } from './shopping-edit/shopping-edit.component';
 import { ShoppingListRoutingModule } from './shopping-listing-routing.module';
 import { SharedModule } from '../shared/shared.module';
+import { LoggingService } from '../logging.service';
 
 
 
@@ -18,6 +19,7 @@ import { SharedModule } from '../shared/shared.module';
     FormsModule,
     ShoppingListRoutingModule,
     SharedModule,
-  ]
+  ],
+  providers: [ LoggingService ]
 })
 export class ShoppingListModule { }
