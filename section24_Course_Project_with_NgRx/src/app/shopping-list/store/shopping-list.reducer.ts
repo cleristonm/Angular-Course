@@ -22,6 +22,8 @@ export function shoppingListReducer(
                     action.payload                    
                 ]
             }
+        default:
+            return state;
     }
     
 }
