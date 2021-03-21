@@ -44,7 +44,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     //   console.log(ingredient);
     // });
     
-    this.slService.addIngredients(this.recipe.ingredients);
+    //this.slService.addIngredients(this.recipe.ingredients);
     this.storeSL.dispatch(
       new ShoppingListActions.AddIngredients(this.recipe.ingredients)
     )
