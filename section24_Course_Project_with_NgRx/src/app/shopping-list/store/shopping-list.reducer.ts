@@ -6,7 +6,7 @@ import  * as ShoppingListActions from "./shopping-list.action";
 export interface State {
     ingredients: Ingredient[],
     editedIngredient: Ingredient,
-    editetingredientIndex: number,
+    editedIngredientIndex: number,
 }
 
 export interface AppState {
@@ -19,7 +19,7 @@ const inititalState: State = {
         new Ingredient('Cheese', 1),
     ],
     editedIngredient: null,
-    editetingredientIndex: -1,
+    editedIngredientIndex: -1,
 };
 
 export function shoppingListReducer(
@@ -44,14 +44,14 @@ export function shoppingListReducer(
                 ]
             }
         case ShoppingListActions.UPDATE_INGREDIENT:
-            const  ingredient = state.ingredients[action.payload.index];
+            //const  ingredient = state.ingredients[action.payload.index];
             const updateIngredient = {
-                ...ingredient,
+                ...state.editedIngredient,
                 ...action.payload.ingredient
             };
 
             const updateIngredients = [...state.ingredients];
-            updateIngredients[action.payload.index] = updateIngredient;
+            updateIngredients[state.editedIngredientIndex] = updateIngredient;
             
             return {
                 ...state,
@@ -62,11 +62,25 @@ export function shoppingListReducer(
                 ...state,
                 ingredients: 
                     state.ingredients.filter( (ig, igIndex) => {
-                        return igIndex !== action.payload.index
+                        return igIndex !== action.payload
                     }) 
                 
-            }       
-            
+            }   
+        case ShoppingListActions.START_EDIT:            
+            return {
+                ...state,
+                editedIngredient: {...state.ingredients[action.payload]},
+                editedIngredientIndex: action.payload                
+            }
+
+        case ShoppingListActions.STOP_EDIT:
+            return {
+                ...state,
+                editedIngredient: null,
+                editedIngredientIndex: -1
+            }
+           
+        
         default:
             return state;
     }
