@@ -2,12 +2,11 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Data, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { Ingredient } from 'src/app/shared/ingredient.model';
-import { ShoppingListService } from 'src/app/shopping-list/shopping-list.service';
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.action';
 import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducer'
+import { AppState } from 'src/app/store/app.reducer';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -19,11 +18,11 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   subscription : Subscription;
   selectedId: number;
 
-  constructor(private slService: ShoppingListService,
+  constructor(
     private recipeService: RecipeService, 
     private route: ActivatedRoute,
     private router: Router,
-    private storeSL: Store<fromShoppingList.AppState>) { }
+    private storeSL: Store<AppState>) { }
 
   ngOnInit(): void {    
     this.subscription = this.route.params.subscribe(

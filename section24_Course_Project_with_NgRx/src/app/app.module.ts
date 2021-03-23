@@ -12,7 +12,8 @@ import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggingService } from './logging.service';
 import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
-
+import { authReducer } from './auth/store/auth.reducer';
+import * as fromApp  from './store/app.reducer';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,7 @@ import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer
   imports: [
     BrowserModule,    
     HttpClientModule,
-    StoreModule.forRoot({shoppingList: shoppingListReducer}),
+    StoreModule.forRoot(fromApp.appReducer),
     AppRoutingModule,    
     ShoppingListModule,
     SharedModule,
