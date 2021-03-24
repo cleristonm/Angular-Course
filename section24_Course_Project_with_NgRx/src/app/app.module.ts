@@ -14,6 +14,8 @@ import { LoggingService } from './logging.service';
 import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
 import { authReducer } from './auth/store/auth.reducer';
 import * as fromApp  from './store/app.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffecs } from './auth/store/auth.effects';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import * as fromApp  from './store/app.reducer';
     BrowserModule,    
     HttpClientModule,
     StoreModule.forRoot(fromApp.appReducer),
+    EffectsModule.forRoot([AuthEffecs]),
     AppRoutingModule,    
     ShoppingListModule,
     SharedModule,

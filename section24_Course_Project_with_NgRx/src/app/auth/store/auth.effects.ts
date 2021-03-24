@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
@@ -15,7 +16,8 @@ export interface AuthResponseData{
     registered?: boolean;
   }
 
-  
+
+@Injectable()
 export class AuthEffecs {
 
     @Effect()
@@ -30,15 +32,21 @@ export class AuthEffecs {
                     returnSecureToken: true
                 }
             ).pipe( 
+                map( resData => {
+                    const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 10000)
+                    ///To create a new observable
+                    return of(new AuthActions.Login({
+                        email: resData.email,
+                        userId: resData.localId,
+                        token: resData.idToken,
+                        expirationDate: expirationDate
+                    }));
+                }),
                 catchError( error => {
 
                     ///To create a new observable
-                    of();
-                }), 
-                map( resData => {
-                    ///To create a new observable
-                    of();
-                })
+                    return of();
+                }),                 
             );
         }),
         
