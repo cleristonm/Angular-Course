@@ -24,7 +24,7 @@ export interface AuthResponseData{
 })
 export class AuthService {
   //https://stackoverflow.com/questions/43348463/what-is-the-difference-between-subject-and-behaviorsubject
-  user = new BehaviorSubject<User>(null);
+  // user = new BehaviorSubject<User>(null);
   
   private tokenExpirationTimer: any;
 

@@ -1,4 +1,3 @@
-import { stat } from "fs";
 import { User } from "../user.model"
 import  * as AuthActions from "./auth.actions"
 
