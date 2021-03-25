@@ -49,9 +49,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 
     const email = form.value.email;
     const password = form.value.password;
-
-    let authObs: Observable<AuthResponseData>;
-
+    
     this.isLoading = true;
     if (this.isLoginMode){
       //authObs = this.authService.login(email,password)
@@ -60,22 +58,12 @@ export class AuthComponent implements OnInit, OnDestroy {
         password: password
       }))
     }else {
-      authObs = this.authService.signup(email,password)
+      this.store.dispatch(new AuthActions.SignupStart({
+        email: email,
+        password: password
+      }))
     }
-
-   
-    // authObs.subscribe( respData => {
-    //   console.log(respData);
-    //   this.isLoading = false;
-    //   this.router.navigate(['/recipes']);
-    // }, 
-    // errorMessage => {
-    //   this.error = errorMessage;
-    //   this.isLoading = false;
-    //   this.showErrorAlert(errorMessage);
-    // });
-
-    
+      
     form.reset();
     
   }

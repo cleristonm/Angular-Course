@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { ErrorHandler, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
@@ -18,6 +18,38 @@ export interface AuthResponseData{
   }
 
 
+const handleAuthentication = (
+    expiresIn: number,
+    email: string,
+    userId: string,
+    token: string
+) => {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 10000)
+    ///To create a new observable
+    return new AuthActions.AuthenticateSuccess({
+        email: email,
+        userId: userId,
+        token: token,
+        expirationDate: expirationDate
+    });
+}
+
+const handleError = (errorRes) => {
+    let errorMesage = 'An unknow error occured!';
+    if (!errorRes.error || !errorRes.error.error){
+        return of(new AuthActions.AuthenticateFail(errorMesage));
+    }
+    switch (errorRes.error.error.message){
+        case 'EMAIL_EXISTS':
+            errorMesage =  'This email exists already!';
+        case 'EMAIL_NOT_FOUND' || 'INVALID_PASSWORD' || 'USER_DISABLED':
+            errorMesage =  'Credentials are not valid or is disabled.';
+        }
+    return of(new AuthActions.AuthenticateFail(errorMesage));
+    
+};
+
+
 @Injectable()
 export class AuthEffecs {
 
@@ -34,27 +66,18 @@ export class AuthEffecs {
                 }
             ).pipe( 
                 map( resData => {
-                    const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 10000)
-                    ///To create a new observable
-                    return new AuthActions.AuthenticateSuccess({
-                        email: resData.email,
-                        userId: resData.localId,
-                        token: resData.idToken,
-                        expirationDate: expirationDate
-                    });
+
+                    return handleAuthentication(
+                        +resData.expiresIn,
+                        resData.email,
+                        resData.localId,
+                        resData.idToken
+                    )
+                    
                 }),
                 catchError( errorRes => {
-                    let errorMesage = 'An unknow error occured!';
-                    if (!errorRes.error || !errorRes.error.error){
-                        return of(new AuthActions.AuthenticateFail(errorMesage));
-                    }
-                    switch (errorRes.error.error.message){
-                        case 'EMAIL_EXISTS':
-                            errorMesage =  'This email exists already!';
-                        case 'EMAIL_NOT_FOUND' || 'INVALID_PASSWORD' || 'USER_DISABLED':
-                            errorMesage =  'Credentials are not valid or is disabled.';
-                        }
-                    return of(new AuthActions.AuthenticateFail(errorMesage));
+                    return handleError(errorRes);
+                    
                 }),                 
             );
         }),
@@ -69,6 +92,34 @@ export class AuthEffecs {
             this.router.navigate(['/']);
         })
     );
+
+    @Effect()
+    authSignup = this.actions$.pipe(
+        ofType(AuthActions.SIGNUP_START),
+        switchMap( (signupAction: AuthActions.SignupStart) => {
+            return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+environment.myAuthKey, {
+              email: signupAction.payload.email,
+              password: signupAction.payload.password,
+              returnSecureToken: true
+            })
+            .pipe( 
+                map( resData => {
+
+                    return handleAuthentication(
+                        +resData.expiresIn,
+                        resData.email,
+                        resData.localId,
+                        resData.idToken
+                    )
+                    
+                }),
+                catchError( errorRes => {
+                    return handleError(errorRes);
+                    
+                }),                 
+            );      
+        })
+    )
 
     constructor(
         private actions$: Actions,
