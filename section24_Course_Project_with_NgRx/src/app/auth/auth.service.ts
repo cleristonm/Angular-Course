@@ -32,24 +32,7 @@ export class AuthService {
     private router: Router,
     private store: Store<fromApp.AppState>) { }
 
-  signup(email: string, password: string){
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='+environment.myAuthKey, {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    })
-    .pipe(catchError( this.handleError ), 
-    tap( resData => {
-      this.handleAuthentication(
-        resData.email, 
-        resData.localId,
-        resData.idToken,
-        +resData.expiresIn,
-      )
-    }
-    ));
-
-  }
+  
 
   private handleAuthentication( email: string, userId: string, token: string, expiresIn: number){
     const expirationDate = new Date(new Date().getTime() + expiresIn * 10000)
@@ -102,8 +85,7 @@ export class AuthService {
   }
 
   logout(){
-    this.store.dispatch( new AuthActions.Logout());
-    this.router.navigate(['/auth'])
+    this.store.dispatch( new AuthActions.Logout());    
     localStorage.removeItem('userData');
     if (this.tokenExpirationTimer){
       clearTimeout(this.tokenExpirationTimer);
@@ -117,24 +99,7 @@ export class AuthService {
     }, expirationDuration);
   }
 
-  login(email: string, password: string){
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+environment.myAuthKey, {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    })
-    .pipe(catchError( this.handleError ),
-    tap( resData => {
-      this.handleAuthentication(
-        resData.email, 
-        resData.localId,
-        resData.idToken,
-        +resData.expiresIn,
-      )
-    }
-    ));
-  }
-
+  
   private handleError(errorRes: HttpErrorResponse){
     let errorMesage = 'An unknow error occured!';
       if (!errorRes.error || !errorRes.error.error){
