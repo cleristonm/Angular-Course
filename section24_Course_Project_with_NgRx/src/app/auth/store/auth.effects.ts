@@ -36,7 +36,7 @@ export class AuthEffecs {
                 map( resData => {
                     const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 10000)
                     ///To create a new observable
-                    return new AuthActions.Login({
+                    return new AuthActions.AuthenticateSuccess({
                         email: resData.email,
                         userId: resData.localId,
                         token: resData.idToken,
@@ -46,7 +46,7 @@ export class AuthEffecs {
                 catchError( errorRes => {
                     let errorMesage = 'An unknow error occured!';
                     if (!errorRes.error || !errorRes.error.error){
-                        return of(new AuthActions.LoginFail(errorMesage));
+                        return of(new AuthActions.AuthenticateFail(errorMesage));
                     }
                     switch (errorRes.error.error.message){
                         case 'EMAIL_EXISTS':
@@ -54,7 +54,7 @@ export class AuthEffecs {
                         case 'EMAIL_NOT_FOUND' || 'INVALID_PASSWORD' || 'USER_DISABLED':
                             errorMesage =  'Credentials are not valid or is disabled.';
                         }
-                    return of(new AuthActions.LoginFail(errorMesage));
+                    return of(new AuthActions.AuthenticateFail(errorMesage));
                 }),                 
             );
         }),
@@ -64,7 +64,7 @@ export class AuthEffecs {
 
     @Effect({dispatch: false})
     authSucess = this.actions$.pipe(
-        ofType(AuthActions.LOGIN),
+        ofType(AuthActions.AUTHENTICATE_SUCCESS),
         tap(() => {
             this.router.navigate(['/']);
         })
