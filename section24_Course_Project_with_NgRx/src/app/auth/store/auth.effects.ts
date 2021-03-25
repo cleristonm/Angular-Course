@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import * as AuthActions from './auth.actions';
 
@@ -35,17 +36,25 @@ export class AuthEffecs {
                 map( resData => {
                     const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 10000)
                     ///To create a new observable
-                    return of(new AuthActions.Login({
+                    return new AuthActions.Login({
                         email: resData.email,
                         userId: resData.localId,
                         token: resData.idToken,
                         expirationDate: expirationDate
-                    }));
+                    });
                 }),
-                catchError( error => {
-
-                    ///To create a new observable
-                    return of();
+                catchError( errorRes => {
+                    let errorMesage = 'An unknow error occured!';
+                    if (!errorRes.error || !errorRes.error.error){
+                        return of(new AuthActions.LoginFail(errorMesage));
+                    }
+                    switch (errorRes.error.error.message){
+                        case 'EMAIL_EXISTS':
+                            errorMesage =  'This email exists already!';
+                        case 'EMAIL_NOT_FOUND' || 'INVALID_PASSWORD' || 'USER_DISABLED':
+                            errorMesage =  'Credentials are not valid or is disabled.';
+                        }
+                    return of(new AuthActions.LoginFail(errorMesage));
                 }),                 
             );
         }),
@@ -53,8 +62,17 @@ export class AuthEffecs {
         
     );
 
+    @Effect({dispatch: false})
+    authSucess = this.actions$.pipe(
+        ofType(AuthActions.LOGIN),
+        tap(() => {
+            this.router.navigate(['/']);
+        })
+    );
+
     constructor(
         private actions$: Actions,
-        private http : HttpClient
+        private http : HttpClient,
+        private router: Router
         ){}
 }
