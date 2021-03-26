@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
@@ -11,11 +12,10 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggingService } from './logging.service';
-import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
-import { authReducer } from './auth/store/auth.reducer';
 import * as fromApp  from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffecs } from './auth/store/auth.effects';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -31,6 +31,7 @@ import { AuthEffecs } from './auth/store/auth.effects';
     ShoppingListModule,
     SharedModule,
     AuthModule,
+    StoreDevtoolsModule.instrument({logOnly: environment.production })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, 
