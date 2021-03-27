@@ -1,12 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import * as fromApp from 'src/app/store/app.reducer';
-import { Store } from '@ngrx/store';
-import { map } from 'rxjs/operators';
+import * as RecipesActions from '../store/recipe.actions';
+
 
 @Component({
   selector: 'app-recipe-edit',
@@ -49,7 +52,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     let recipeIngredients = new FormArray([]);    
 
     if (this.editMode){
-      this.store.select('recipes').pipe(map(recipeState => {
+      this.subscription = this.store.select('recipes').pipe(map(recipeState => {
           return recipeState.recipes.find( (recipe, index) => {
             return index === this.id;
           })
@@ -104,9 +107,14 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     //   this.recipeForm.value['ingredients']
     // );
     if (this.editMode){
-      this.recipeService.editRecipe(this.id, this.recipeForm.value);
+      //this.recipeService.editRecipe(this.id, this.recipeForm.value);
+      this.store.dispatch( new RecipesActions.UpdateRecipe({
+        index: this.id,
+        newRecipe: this.recipeForm.value
+      }))
     }else {      
-      this.recipeService.addRecipe(this.recipeForm.value);
+      // this.recipeService.addRecipe(this.recipeForm.value);
+      this.store.dispatch( new RecipesActions.AddRecipe(this.recipeForm.value));
     }
     this.onCancel();
     
@@ -127,7 +135,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   // }
 
   ngOnDestroy(){
-    // this.subscription.unsubscribe();
+    if (this.subscription){
+       this.subscription.unsubscribe();
+    }
   }
 
   removeIngredient(id:number){

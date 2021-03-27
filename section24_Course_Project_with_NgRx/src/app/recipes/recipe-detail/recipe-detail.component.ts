@@ -2,11 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.action';
 import * as fromApp from 'src/app/store/app.reducer';
-import { map, switchMap } from 'rxjs/operators';
+import * as RecipesActions from '../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -66,7 +68,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
 
   onDeleteRecipe(){
     if (confirm("Are you sure to delete this recipe: "+this.recipe.name)) {
-      this.recipeService.deleteRecipe(this.selectedId);
+      this.store.dispatch(new RecipesActions.DeleteRecipe(this.selectedId));
       this.router.navigate(['/recipes']);
     }
   }
