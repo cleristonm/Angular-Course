@@ -1,12 +1,12 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Data, Params, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.action';
-import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducer'
-import { AppState } from 'src/app/store/app.reducer';
+import * as fromApp from 'src/app/store/app.reducer';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -22,20 +22,33 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     private recipeService: RecipeService, 
     private route: ActivatedRoute,
     private router: Router,
-    private storeSL: Store<AppState>) { }
+    private store: Store<fromApp.AppState>) { }
 
   ngOnInit(): void {    
-    this.subscription = this.route.params.subscribe(
-      (params: Params) => {
-        this.selectedId = +params['id'];
-        this.recipe = this.recipeService.getRecipe(this.selectedId);
-      }
-    )
-    console.log(this.recipe);
+
+    this.route.params
+      .pipe(
+          map(params => {
+            return +params['id'];
+          }),
+          switchMap( id => {
+            this.selectedId = id;
+            return this.store.select('recipes');
+          }),
+          map( recipeState => {
+            return recipeState.recipes.find((recipe, index) => {
+              return index === this.selectedId;
+            });
+          })
+      )
+      .subscribe( recipe => {
+        this.recipe = recipe;
+      });
+    
   }
   
   ngOnDestroy(){
-    this.subscription.unsubscribe();
+    // this.subscription.unsubscribe();
   }
 
   addIngredientsToShoppingList(){
@@ -45,7 +58,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     // });
     
     //this.slService.addIngredients(this.recipe.ingredients);
-    this.storeSL.dispatch(
+    this.store.dispatch(
       new ShoppingListActions.AddIngredients(this.recipe.ingredients)
     )
 
