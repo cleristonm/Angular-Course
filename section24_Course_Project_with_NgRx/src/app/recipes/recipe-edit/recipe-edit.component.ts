@@ -5,7 +5,6 @@ import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
-import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import * as fromApp from 'src/app/store/app.reducer';
 import * as RecipesActions from '../store/recipe.actions';
@@ -23,8 +22,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   recipeForm: FormGroup;
   subscription: Subscription;
 
-  constructor(private route: ActivatedRoute,
-    private recipeService: RecipeService,
+  constructor(private route: ActivatedRoute,    
     private router: Router,
     private store: Store<fromApp.AppState> ) { }
 
@@ -36,7 +34,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
           this.editMode = params['id'] != null;
 
           if (this.editMode){
-            this.recipe = this.recipeService.getRecipe(this.id);            
+            this.store.select('recipes').pipe(map(recipeState => {
+              return recipeState.recipes.find( (recipe, index) => {
+                return index === this.id;
+              })
+            })).subscribe(recipe => {         
+              this.recipe = recipe; 
+            });           
           }
 
           this.initForm();

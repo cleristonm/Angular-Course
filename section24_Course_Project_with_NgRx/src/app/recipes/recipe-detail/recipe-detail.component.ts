@@ -3,8 +3,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-
-import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipes/recipe.model';
 import * as ShoppingListActions from '../../shopping-list/store/shopping-list.action';
 import * as fromApp from 'src/app/store/app.reducer';
@@ -21,7 +19,6 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
   selectedId: number;
 
   constructor(
-    private recipeService: RecipeService, 
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.AppState>) { }

@@ -5,10 +5,10 @@ import { Recipe } from '../recipes/recipe.model';
 
 export const SET_RECIPES = '[Recipes] Set Recipes';
 export const FETCH_RECIPES = '[Recipes] Fetch Recipes';
-
-export const ADD_RECIPE = '[Recipes] Add Recipes';
-export const UPDATE_RECIPE = '[Recipes] Update Recipes';
-export const DELETE_RECIPE = '[Recipes] Delete Recipes';
+export const ADD_RECIPE = '[Recipes] Add Recipe';
+export const UPDATE_RECIPE = '[Recipes] Update Recipe';
+export const DELETE_RECIPE = '[Recipes] Delete Recipe';
+export const STORE_RECIPES = '[Recipes] Store Recipes';
 
 
 export class SetRecipes implements Action {
@@ -38,9 +38,14 @@ export class DeleteRecipe implements Action {
   constructor(public payload: number) {}
 }
 
+export class StoreRecipes implements Action {
+  readonly type = STORE_RECIPES;
+}
+
 export type RecipesActions =
   | SetRecipes
   | FetchRecipes
   | AddRecipe
   | UpdateRecipe
-  | DeleteRecipe;
+  | DeleteRecipe
+  | StoreRecipes;
